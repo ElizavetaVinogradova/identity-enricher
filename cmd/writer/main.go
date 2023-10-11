@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"identity-enricher/cmd"
-	"identity-enricher/internal/broker/kafka"
 
 	"github.com/spf13/viper"
 )
@@ -16,8 +15,8 @@ func main() {
 
 	//создаем и закрываем клиентов
 
-	broker := kafka.NewBrokerWriter([]string{"localhost:9093"}, "ticks")
-	defer broker.Close()
+	// broker := kafka.NewBrokerWriter([]string{"localhost:9093"}, "ticks")
+	// defer broker.Close()
 
 	viper.SetDefault("service.batchSize", 1)
 	//создаем сервис и начинаем процессинг

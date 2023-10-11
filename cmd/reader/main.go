@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"identity-enricher/cmd"
-	"identity-enricher/internal/broker/kafka"
 
 	"github.com/spf13/viper"
 )
@@ -14,8 +13,9 @@ func main() {
 	}
 	cmd.SetupLogging()
 
-	broker := kafka.NewBrokerReader([]string{"localhost:9093"}, "fio")
-	defer broker.Close()
+	//создаем и закрываем брокера
+	//broker := kafka.NewBrokerProcessor([]string{"localhost:9093"}, "fio", "fio_failed")
+	//defer broker.Read()
 
 	//создаем и закрываем репу
 
