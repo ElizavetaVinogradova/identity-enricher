@@ -21,12 +21,10 @@ type AgeResponse struct {
 	Age   int8    `json:"age"`
 }
 
-func (c *AgeEnrichmentClient) FetchAgeFromAPI(ageUrl string) (int8, error) {
-	url := fmt.Sprintf("%s/%s", c.AgeURL, ageUrl)
-
-	resp, err := http.Get(url)
+func (c *AgeEnrichmentClient) FetchAge() (int8, error) {
+	resp, err := http.Get(c.AgeURL)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("GET request failed with error: %s", err)
 	}
 	defer resp.Body.Close()
 
@@ -48,7 +46,7 @@ func (c *AgeEnrichmentClient) FetchAgeFromAPI(ageUrl string) (int8, error) {
 }
 
 // func main() {
-// 	ageURL := "http://example.com/api" // Замените на базовый URL вашего API
+// 	ageURL := "http://example.com/api" // базовый URL API
 
 // 	enrichmentClient := NewEnrichmentClient(ageURL)
 

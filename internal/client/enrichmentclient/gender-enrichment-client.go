@@ -22,10 +22,8 @@ type GenderResponse struct {
 	Probability float64 `json:"probability"`
 }
 
-func (c *GenderEnrichmentClient) FetchGenderFromAPI(endpoint string) (string, error) {
-	url := fmt.Sprintf("%s/%s", c.GenderURL, endpoint)
-
-	resp, err := http.Get(url)
+func (c *GenderEnrichmentClient) FetchGender() (string, error) {
+	resp, err := http.Get(c.GenderURL)
 	if err != nil {
 		return "", err
 	}
@@ -49,7 +47,7 @@ func (c *GenderEnrichmentClient) FetchGenderFromAPI(endpoint string) (string, er
 
 
 // func main() {
-// 	GenderURL := "http://example.com/api" // Замените на базовый URL вашего API
+// 	GenderURL := "http://example.com/api" // базовый URL API
 
 // 	enrichmentClient := NewEnrichmentClient(GenderURL)
 

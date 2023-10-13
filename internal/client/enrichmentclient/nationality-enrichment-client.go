@@ -26,10 +26,8 @@ type Country struct {
 	Probability float64 `json:"probability"`
 }
 
-func (c *NationalityEnrichmentClient) FetchNationalityFromAPI(endpoint string) (string, error) {
-	url := fmt.Sprintf("%s/%s", c.NationalityURL, endpoint)
-
-	resp, err := http.Get(url)
+func (c *NationalityEnrichmentClient) FetchNationality() (string, error) {
+	resp, err := http.Get(c.NationalityURL)
 	if err != nil {
 		return "", err
 	}
@@ -54,8 +52,7 @@ func (c *NationalityEnrichmentClient) FetchNationalityFromAPI(endpoint string) (
 
 func chooseCountryByBrobability(countries []Country)string {
 	maxProbability := -1.0
-	var countryWithMaxProbability string // Переменная для хранения CountryID с максимальным Probability
-
+	var countryWithMaxProbability string
 	for _, country := range countries {
 		if country.Probability > maxProbability {
 			maxProbability = country.Probability
@@ -66,11 +63,8 @@ func chooseCountryByBrobability(countries []Country)string {
 	return countryWithMaxProbability
 }
 
-
-
-
 // func main() {
-// 	ageURL := "http://example.com/api" // Замените на базовый URL вашего API
+// 	ageURL := "http://example.com/api" // базовый URL API
 
 // 	enrichmentClient := NewEnrichmentClient(ageURL)
 

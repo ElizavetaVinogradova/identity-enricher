@@ -10,8 +10,8 @@ type FioClientDTO struct {
 	Name        string `json:"name"`
 	Surname     string `json:"surname"`
 	Patronymic  string `json:"patronymic"`
-	Age         int8  `json:"age"` 
-	Gender         string `json:"gender"`
+	Age         int8   `json:"age"`
+	Gender      string `json:"gender"`
 	Nationality string `json:"nationality"`
 }
 
@@ -27,9 +27,9 @@ func (dto *FioClientDTO) mapToServiceFio() service.Fio {
 }
 
 type RequestMessage struct {
-	Name        string `json:"name"`
-	Surname     string `json:"surname"`
-	Patronymic  string `json:"patronymic"`
+	Name       string `json:"name"`
+	Surname    string `json:"surname"`
+	Patronymic string `json:"patronymic"`
 }
 
 func MarshalRequest(request RequestMessage) ([]byte, error) {

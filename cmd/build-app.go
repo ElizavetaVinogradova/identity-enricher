@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"identity-enricher/internal/repo/postgres"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -33,16 +35,26 @@ func SetupLogging() {
 	}
 }
 
-// func BuildMySqlConfig() mysql.Config {
-// 	return mysql.Config{
-// 		Host:     viper.GetString("db.host"),
-// 		Port:     viper.GetString("db.port"),
-// 		Username: viper.GetString("db.username"),
-// 		Password: viper.GetString("db.password"),
-// 		DBName:   viper.GetString("db.dbname"),
-// 		SSLMode:  viper.GetString("db.sslmode"),
-// 	}
-// }
+func BuildPostgreSqlConfig() postgres.Config {
+	return postgres.Config{
+		Host:     viper.GetString("db.host"),
+		Port:     viper.GetString("db.port"),
+		Username: viper.GetString("db.username"),
+		Password: viper.GetString("db.password"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
+	}
+}
+
+func GetAgeURl() string{
+	return viper.GetString("enrichmentClient.ageUrl")
+}
+func GetGenderURl() string{
+	return viper.GetString("enrichmentClient.genderUrl")
+}
+func GetNationalityURl() string{
+	return viper.GetString("enrichmentClient.nationalityUrl")
+}
 
 // func BuildApiServerConfig() apiserver.Config {
 // 	return apiserver.Config{

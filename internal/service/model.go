@@ -4,6 +4,19 @@ type FioRepository interface {
 	Create(fio Fio) error
 }
 
+type AgeClient interface {
+	FetchAge()( int8, error)
+}
+
+type GenderClient interface {
+	FetchGender() (string, error)
+}
+
+type NationalityClient interface {
+	FetchNationality() (string, error)
+}
+
+
 type Fio struct {
 	Name       string `json:"name"`
 	Surname    string `json:"surname"`
