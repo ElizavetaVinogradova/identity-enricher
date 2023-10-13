@@ -45,7 +45,7 @@ func (b *BrokerProcessor) Read() {
 		}
 		log.Debugf("Fio from Kafka Unmarshalled: %s", fmt.Sprintf("%v", fioDTO))
 		fio := mapKafkaDTOToServiceFio(fioDTO)
-		error := b.service.Run(fio)
+		error := b.service.StoreFio(fio)
 		if error != nil {
 			fio.Error = err.Error()
 			b.writeCorruptedFioToKafka(fioDTO)

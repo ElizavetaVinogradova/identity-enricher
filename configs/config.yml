@@ -1,11 +1,11 @@
 logLevel: "debug"
 
 db:
-    username: "user"
+    username: "postgres"
     password: "1234"
     host: "localhost"
-    port: "3306"
-    dbname: "ticks"
+    port: "5432"
+    dbname: "postgres"
     sslmode: "disable"
 
 service:
@@ -13,7 +13,7 @@ service:
 
 enrichmentClient:
     ageUrl: "https://api.agify.io/?name=Dmitriy"
-    sexUrl: "https://api.genderize.io/?name=Dmitriy"
+    genderUrl: "https://api.genderize.io/?name=Dmitriy"
     nationalityUrl: "https://api.nationalize.io/?name=Dmitriy"
 
 apiserver:
