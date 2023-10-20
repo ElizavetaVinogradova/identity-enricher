@@ -3,6 +3,7 @@ package cmd
 import (
 	"identity-enricher/internal/repo/postgres"
 
+	"github.com/segmentio/kafka-go"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -35,6 +36,20 @@ func SetupLogging() {
 	}
 }
 
+func BuildKafkaReaderConfig() kafka.ReaderConfig {
+	return kafka.ReaderConfig{
+		Brokers: []string{viper.GetString("kafka.brokerAddress")},
+		Topic:   viper.GetString("kafka.readerTopic"),
+	}
+}
+
+func BuildKafkaWriterConfig() kafka.WriterConfig {
+	return kafka.WriterConfig{
+		Brokers: []string{viper.GetString("kafka.brokerAddress")},
+		Topic:   viper.GetString("kafka.writerTopic"),
+	}
+}
+
 func BuildPostgreSqlConfig() postgres.Config {
 	return postgres.Config{
 		Host:     viper.GetString("db.host"),
@@ -46,13 +61,13 @@ func BuildPostgreSqlConfig() postgres.Config {
 	}
 }
 
-func GetAgeURl() string{
+func GetAgeURl() string {
 	return viper.GetString("enrichmentClient.ageUrl")
 }
-func GetGenderURl() string{
+func GetGenderURl() string {
 	return viper.GetString("enrichmentClient.genderUrl")
 }
-func GetNationalityURl() string{
+func GetNationalityURl() string {
 	return viper.GetString("enrichmentClient.nationalityUrl")
 }
 

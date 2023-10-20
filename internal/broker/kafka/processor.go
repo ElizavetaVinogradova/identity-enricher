@@ -15,20 +15,7 @@ type BrokerProcessor struct {
 	service service.FioService
 }
 
-func NewBrokerProcessor(brokerAddresses []string, readFromTopic string, writeToTopic string, service service.FioService) *BrokerProcessor {
-	//todo конфиги и инициализацию ридера с райтером перенести в мейн, а тут в методе получать сразу готовых ридера и райтера
-	readerConfig := kafka.ReaderConfig{
-		Brokers: brokerAddresses,
-		Topic:   readFromTopic,
-	}
-	reader := kafka.NewReader(readerConfig)
-
-	writerConfig := kafka.WriterConfig{
-		Brokers: brokerAddresses,
-		Topic:   writeToTopic,
-	}
-	writer := kafka.NewWriter(writerConfig)
-
+func NewBrokerProcessor(reader *kafka.Reader, writer *kafka.Writer, service service.FioService) *BrokerProcessor {
 	return &BrokerProcessor{reader: reader, writer: writer, service: service}
 }
 
@@ -39,15 +26,16 @@ func (b *BrokerProcessor) Read() {
 			log.Errorf("Couldn't read fio from Kafka: %s", err)
 		}
 
+
 		fioDTO, err := UnmarshalMessage(message.Value)
 		if err != nil {
 			log.Errorf("Couldn't Unmarshal fio from Kafka: %s", err)
 		}
-		log.Debugf("Fio from Kafka Unmarshalled: %s", fmt.Sprintf("%v", fioDTO))
+
 		fio := mapKafkaDTOToServiceFio(fioDTO)
-		error := b.service.StoreFio(fio)
-		if error != nil {
-			fio.Error = err.Error()
+		err = b.service.StoreFio(fio)
+		if err != nil {
+			fioDTO.Error = err.Error()
 			b.writeCorruptedFioToKafka(fioDTO)
 		}
 
@@ -59,7 +47,7 @@ func (b *BrokerProcessor) writeCorruptedFioToKafka(fioDTO FioKafkaDTO) error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("marshaled message for Kafka: %s", byteValue)
+	log.Debugf("marshaled corrupted message for Kafka: %s", byteValue)
 
 	message := kafka.Message{
 		Value: byteValue,
@@ -67,7 +55,7 @@ func (b *BrokerProcessor) writeCorruptedFioToKafka(fioDTO FioKafkaDTO) error {
 
 	err = b.writer.WriteMessages(context.Background(), message)
 	if err != nil {
-		return fmt.Errorf("write message to Kafka: %w", err)
+		return fmt.Errorf("write corrupted message to Kafka: %w", err)
 	}
 	return nil
 }

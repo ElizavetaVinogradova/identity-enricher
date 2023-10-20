@@ -7,6 +7,10 @@ import (
 	"identity-enricher/internal/client/enrichmentclient"
 	"identity-enricher/internal/repo/postgres"
 	"identity-enricher/internal/service"
+
+	kafka_go "github.com/segmentio/kafka-go"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -25,6 +29,9 @@ func main() {
 	}
 	fioService := service.NewFioService(ageClient, genderClient, nationalityClient, repository)
 
-	kafka.NewBrokerProcessor([]string{"localhost:9093"}, "fio", "fio_failed", *fioService).Read()
+	reader := kafka_go.NewReader(cmd.BuildKafkaReaderConfig())
+	writer := kafka_go.NewWriter(cmd.BuildKafkaWriterConfig())
+
+	kafka.NewBrokerProcessor(reader, writer, *fioService).Read()
 	// defer broker.Close()
 }
