@@ -12,7 +12,7 @@ tasks:
   install-migrate:
     desc: "Install the migrate tool"
     cmds:
-      - go install -tags 'postgresql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+      - go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
   run-migrate:
     desc: "Run database migration"

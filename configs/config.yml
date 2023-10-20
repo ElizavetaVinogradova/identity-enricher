@@ -1,5 +1,11 @@
 logLevel: "debug"
 
+kafka:
+    brokerAddress: "localhost:9093"
+    readerTopic: "FIO"
+    writerTopic: "FIO_FAILED"
+
+
 db:
     username: "postgres"
     password: "1234"
