@@ -1,7 +1,8 @@
 package service
 
 import (
-	"errors"
+	"fmt"
+	"regexp"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -17,56 +18,65 @@ func NewFioService(ageClient AgeClient, genderClient GenderClient, nationalityCl
 	return &FioService{
 		ageClient:         ageClient,
 		genderClient:      genderClient,
-		nationalityClient: nationalityClient, 
+		nationalityClient: nationalityClient,
 		fioRepository:     fioRepository,
 	}
 }
 
 func (s *FioService) StoreFio(fio Fio) error {
-	if !isFioValid(fio) { //1. валидация полученного сообщения
-		return errors.New("received FIO is invalid") //2. отправка обратно в кафку в случае ошибки
+	err := isFioValid(fio)
+	if err != nil {
+		return err
 	}
 
-	//3. обогащение инфой от клиентов
+	s.enrichWithAge(&fio)
+	s.enrichWithGender(&fio)
+	s.enrichWithNationality(&fio)
 
-	err := s.fioRepository.Create(fio)
+	err = s.fioRepository.Create(fio)
 	if err != nil {
 		log.Errorf("Couldn't create fio: %s", err)
 	}
 	return nil
 }
 
-func isFioValid(fio Fio) bool {
-	if fio.Name == "" || fio.Surname == "" {
-		//todo Какие еще условия для проверки?
-		return false
-	}
-	return true
-}
-
 func (s *FioService) enrichWithAge(fio *Fio) error {
-	age, err := s.ageClient.FetchAge()//валидировать пришедшие данные?
+	age, err := s.ageClient.FetchAge()
 	if err != nil {
-		return err 
+		return err
 	}
 	fio.Age = age
 	return nil
 }
 
 func (s *FioService) enrichWithGender(fio *Fio) error {
-	gender, err := s.genderClient.FetchGender()//валидировать пришедшие данные?
+	gender, err := s.genderClient.FetchGender()
 	if err != nil {
-		return err 
+		return err
 	}
 	fio.Gender = gender
 	return nil
 }
 
 func (s *FioService) enrichWithNationality(fio *Fio) error {
-	nationality, err := s.nationalityClient.FetchNationality() //валидировать пришедшие данные?
+	nationality, err := s.nationalityClient.FetchNationality()
 	if err != nil {
 		return err
 	}
 	fio.Nationality = nationality
+	return nil
+}
+
+func isFioValid(fio Fio) error {
+	nonAlphabetic := regexp.MustCompile("^[A-Za-z]+$")
+	if fio.Name == "" || !nonAlphabetic.MatchString(fio.Name) {
+		return fmt.Errorf("the name must contain only alpfabetic characters: %s", fio.Name)
+	}
+	if fio.Surname == "" || !nonAlphabetic.MatchString(fio.Surname) {
+		return fmt.Errorf("the surname must contain only alpfabetic characters: %s", fio.Surname)
+	}
+	if fio.Patronymic != "" && !nonAlphabetic.MatchString(fio.Patronymic) {
+		return fmt.Errorf("the patronymic can be empty or must contain only alpfabetic characters: %s", fio.Surname)
+	}
 	return nil
 }
