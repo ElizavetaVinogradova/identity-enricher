@@ -2,6 +2,7 @@ package service
 
 type FioRepository interface {
 	Create(fio Fio) error
+	GetFioById(id int64) (Fio, error)
 }
 
 type AgeClient interface {

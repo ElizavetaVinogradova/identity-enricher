@@ -63,7 +63,7 @@ func (r *FioRepository) Create(fio service.Fio) error {
 	return nil
 }
 
-func (r *FioRepository) GetById(id int64) (service.Fio, error) {
+func (r *FioRepository) GetFioById(id int64) (service.Fio, error) {
 	query := "SELECT * FROM ticks WHERE id = ?"
 
 	var fioDB FioDataBaseDTO

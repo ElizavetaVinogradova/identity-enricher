@@ -23,6 +23,14 @@ func NewFioService(ageClient AgeClient, genderClient GenderClient, nationalityCl
 	}
 }
 
+func (s *FioService) GetFioById(id int64) (Fio, error) {
+	fio, err := s.fioRepository.GetFioById(id)
+	if err != nil {
+		return Fio{}, err
+	}
+	return fio, nil
+}
+
 func (s *FioService) StoreFio(fio Fio) error {
 	err := isFioValid(fio)
 	if err != nil {
@@ -36,6 +44,20 @@ func (s *FioService) StoreFio(fio Fio) error {
 	err = s.fioRepository.Create(fio)
 	if err != nil {
 		log.Errorf("Couldn't create fio: %s", err)
+	}
+	return nil
+}
+
+func isFioValid(fio Fio) error {
+	nonAlphabetic := regexp.MustCompile("^[A-Za-z]+$")
+	if fio.Name == "" || !nonAlphabetic.MatchString(fio.Name) {
+		return fmt.Errorf("the name must contain only alpfabetic characters: %s", fio.Name)
+	}
+	if fio.Surname == "" || !nonAlphabetic.MatchString(fio.Surname) {
+		return fmt.Errorf("the surname must contain only alpfabetic characters: %s", fio.Surname)
+	}
+	if fio.Patronymic != "" && !nonAlphabetic.MatchString(fio.Patronymic) {
+		return fmt.Errorf("the patronymic can be empty or must contain only alpfabetic characters: %s", fio.Surname)
 	}
 	return nil
 }
@@ -67,16 +89,3 @@ func (s *FioService) enrichWithNationality(fio *Fio) error {
 	return nil
 }
 
-func isFioValid(fio Fio) error {
-	nonAlphabetic := regexp.MustCompile("^[A-Za-z]+$")
-	if fio.Name == "" || !nonAlphabetic.MatchString(fio.Name) {
-		return fmt.Errorf("the name must contain only alpfabetic characters: %s", fio.Name)
-	}
-	if fio.Surname == "" || !nonAlphabetic.MatchString(fio.Surname) {
-		return fmt.Errorf("the surname must contain only alpfabetic characters: %s", fio.Surname)
-	}
-	if fio.Patronymic != "" && !nonAlphabetic.MatchString(fio.Patronymic) {
-		return fmt.Errorf("the patronymic can be empty or must contain only alpfabetic characters: %s", fio.Surname)
-	}
-	return nil
-}
