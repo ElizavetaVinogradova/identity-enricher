@@ -6,7 +6,7 @@ import (
 )
 
 type FioAPI struct {
-	// id ???
+	Id          int64  `json:"id"`
 	Name        string `json:"name"`
 	Surname     string `json:"surname"`
 	Patronymic  string `json:"patronymic"`

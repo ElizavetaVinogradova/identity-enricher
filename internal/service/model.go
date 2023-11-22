@@ -6,7 +6,7 @@ type FioRepository interface {
 }
 
 type AgeClient interface {
-	FetchAge()( int8, error)
+	FetchAge() (int8, error)
 }
 
 type GenderClient interface {
@@ -17,13 +17,13 @@ type NationalityClient interface {
 	FetchNationality() (string, error)
 }
 
-
 type Fio struct {
-	Name       string `json:"name"`
-	Surname    string `json:"surname"`
-	Patronymic string `json:"patronymic"`
-	Age         int8  `json:"age"`
-	Gender         string `json:"gender"`
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Surname     string `json:"surname"`
+	Patronymic  string `json:"patronymic"`
+	Age         int8   `json:"age"`
+	Gender      string `json:"gender"`
 	Nationality string `json:"nationality"`
-	Error      string `json:"error"`
+	Error       string `json:"error"`
 }

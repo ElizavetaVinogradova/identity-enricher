@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"identity-enricher/internal/apiserver"
 	"identity-enricher/internal/repo/postgres"
 
 	"github.com/segmentio/kafka-go"
@@ -71,8 +72,8 @@ func GetNationalityURl() string {
 	return viper.GetString("enrichmentClient.nationalityUrl")
 }
 
-// func BuildApiServerConfig() apiserver.Config {
-// 	return apiserver.Config{
-// 		BindAddress: viper.GetString("apiserver.bindAddress"),
-// 	}
-// }
+func BuildApiServerConfig() apiserver.Config {
+	return apiserver.Config{
+		BindAddress: viper.GetString("apiserver.bindAddress"),
+	}
+}

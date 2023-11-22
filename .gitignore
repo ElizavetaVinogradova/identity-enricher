@@ -1,2 +1,3 @@
 cmd/reader/reader.exe
 cmd/writer/writer.exe
+cmd/apiserver/apiserver.exe

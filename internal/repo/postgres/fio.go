@@ -64,7 +64,7 @@ func (r *FioRepository) Create(fio service.Fio) error {
 }
 
 func (r *FioRepository) GetFioById(id int64) (service.Fio, error) {
-	query := "SELECT * FROM ticks WHERE id = ?"
+	query := "SELECT * FROM fio WHERE id = $1"
 
 	var fioDB FioDataBaseDTO
 	err := r.db.Get(&fioDB, query, id)

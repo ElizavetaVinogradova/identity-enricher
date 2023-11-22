@@ -65,8 +65,10 @@ func (s *ApiServer) getFioById(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonResponse)
 }
 
+//todo what about map FioAPI to Fio???
 func mapFioToFioAPI(fio service.Fio) FioAPI {
 	var fioAPI FioAPI
+	fioAPI.Id = fio.Id
 	fioAPI.Name = fio.Name
 	fioAPI.Surname = fio.Surname
 	fioAPI.Patronymic = fio.Patronymic
@@ -75,3 +77,4 @@ func mapFioToFioAPI(fio service.Fio) FioAPI {
 	fioAPI.Nationality = fio.Nationality
 	return fioAPI
 }
+
